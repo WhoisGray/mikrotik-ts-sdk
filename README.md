@@ -4,13 +4,13 @@ This SDK provides a TypeScript interface for interacting with MikroTik RouterOS 
 
 ## Installation
 
-npm install mikrotik-ts-sdk
+npm install @whoisgray/mikrotik-ts-sdk
 
 text
 
 ## Usage
 
-import { RouterOSClient } from "mikrotik-ts-sdk";
+import { RouterOSClient } from "@whoisgray/mikrotik-ts-sdk";
 
 const client = new RouterOSClient({
 host: "192.168.1.1",
@@ -34,4 +34,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License.
-
