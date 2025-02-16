@@ -1,18 +1,4 @@
-interface Config {
-  host: string;
-  username: string;
-  password: string;
-}
-
-interface UserProfile {
-  ".id": string;
-  "end-time": string;
-  profile: string;
-  state: "waiting" | "running-active" | "active" | "used";
-  user: string;
-}
-
-interface User {
+export interface User {
   ".id": string;
   attributes: string;
   disabled: string;
@@ -23,7 +9,8 @@ interface User {
   "shared-users": string;
   comment?: string;
 }
-interface AddUser {
+
+export interface AddUser {
   attributes?: string;
   disabled?: string;
   group?: string;
@@ -34,7 +21,15 @@ interface AddUser {
   comment?: string;
 }
 
-interface ProfileLimitation {
+export interface UserProfile {
+  ".id": string;
+  "end-time": string;
+  profile: string;
+  state: "waiting" | "running-active" | "active" | "used";
+  user: string;
+}
+
+export interface ProfileLimitation {
   ".id": string;
   "from-time": string;
   limitation: string;
@@ -42,4 +37,3 @@ interface ProfileLimitation {
   "till-time": string;
   weekdays: string;
 }
-export { Config, UserProfile, User, AddUser, ProfileLimitation };
