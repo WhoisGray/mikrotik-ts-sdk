@@ -7,6 +7,7 @@ import {
   UpdateUser,
 } from "../types";
 import { logger } from "../utils/logger";
+import { RouterOSError } from "../utils/error-handler";
 
 export class UserManager {
   constructor(private httpClient: AxiosInstance) {}
@@ -16,16 +17,17 @@ export class UserManager {
     return response.data;
   }
 
-  async getUserById(id: string): Promise<User> {
-    const response = await this.httpClient.get("/user-manager/user", {
-      params: {
-        ".id": id,
-      },
-    });
-    if (response.data && response.data.length > 0) {
-      return response.data[0];
+  async getUserById(id: string): Promise<User | null> {
+    try {
+      const response = await this.httpClient.get(`/user-manager/user/${id}`);
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof RouterOSError && error.statusCode === 404) {
+        logger.warn(`User with ID ${id} not found`);
+        return null;
+      }
+      throw error;
     }
-    throw new Error("User not found");
   }
 
   async addUser(newUser: AddUser): Promise<User> {
