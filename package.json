@@ -10,7 +10,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
     "clean": "rm -rf dist",
     "test": "jest",
     "prepublishOnly": "npm run build"
