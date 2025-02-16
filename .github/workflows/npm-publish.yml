@@ -15,6 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Setup for GitHub Packages
       - name: Setup Node.js for GitHub Packages
         uses: actions/setup-node@v3
         with:
@@ -28,17 +29,24 @@ jobs:
       - name: Build package
         run: npm run build
 
+      # Publish to GitHub Packages
       - name: Publish to GitHub Packages
         run: npm publish --registry=https://npm.pkg.github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Switch to npm Registry (IMPORTANT FIX)
       - name: Setup Node.js for npm Registry
         uses: actions/setup-node@v3
         with:
           node-version: "18"
           registry-url: "https://registry.npmjs.org/"
 
+      # Authenticate for npm (IMPORTANT FIX)
+      - name: Authenticate with npm
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      # Publish to npm Registry
       - name: Publish to npm
         run: npm publish --access public
         env:
