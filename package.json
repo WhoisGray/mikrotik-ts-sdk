@@ -33,7 +33,7 @@
   "homepage": "https://github.com/WhoisGray/mikrotik-ts-sdk#readme",
   "publishConfig": {
     "@whoisgray:registry": "https://npm.pkg.github.com",
-    "access": "public" // Add this line to make your package public
+    "access": "public"
   },
   "engines": {
     "node": ">=16.0.0"
