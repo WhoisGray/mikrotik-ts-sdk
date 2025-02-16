@@ -1,5 +1,11 @@
 import { AxiosInstance } from "axios";
-import { User, AddUser, UserProfile, ProfileLimitation } from "../types";
+import {
+  User,
+  AddUser,
+  UserProfile,
+  ProfileLimitation,
+  UpdateUser,
+} from "../types";
 import { logger } from "../utils/logger";
 
 export class UserManager {
@@ -10,14 +16,36 @@ export class UserManager {
     return response.data;
   }
 
-  async addUser(newUser: AddUser): Promise<void> {
-    try {
-      const response = await this.httpClient.put("/user-manager/user", newUser);
-      logger.info(`Added user: ${response.data.name}`);
-    } catch (error) {
-      logger.error(`Error adding user: ${newUser.name}`, error);
-      throw error;
+  async getUserById(id: string): Promise<User> {
+    const response = await this.httpClient.get("/user-manager/user", {
+      params: {
+        ".id": id,
+      },
+    });
+    if (response.data && response.data.length > 0) {
+      return response.data[0];
     }
+    throw new Error("User not found");
+  }
+
+  async addUser(newUser: AddUser): Promise<User> {
+    const response = await this.httpClient.put("/user-manager/user", newUser);
+    logger.info(`Added user: ${response.data.name}`);
+    return response.data;
+  }
+
+  async updateUser(id: string, updateData: UpdateUser): Promise<User> {
+    const response = await this.httpClient.patch(
+      `/user-manager/user/${id}`,
+      updateData
+    );
+    logger.info(`Updated user: ${response.data.name}`);
+    return response.data;
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await this.httpClient.delete(`/user-manager/user/${id}`);
+    logger.info(`Deleted user with ID: ${id}`);
   }
 
   async getUserProfiles(): Promise<UserProfile[]> {
@@ -30,6 +58,34 @@ export class UserManager {
     });
   }
 
+  async addUserProfile(
+    profile: Omit<UserProfile, ".id">
+  ): Promise<UserProfile> {
+    const response = await this.httpClient.put(
+      "/user-manager/user-profile",
+      profile
+    );
+    logger.info(`Added user profile: ${response.data.profile}`);
+    return response.data;
+  }
+
+  async updateUserProfile(
+    id: string,
+    profile: Partial<UserProfile>
+  ): Promise<UserProfile> {
+    const response = await this.httpClient.patch(
+      `/user-manager/user-profile/${id}`,
+      profile
+    );
+    logger.info(`Updated user profile: ${response.data.profile}`);
+    return response.data;
+  }
+
+  async deleteUserProfile(id: string): Promise<void> {
+    await this.httpClient.delete(`/user-manager/user-profile/${id}`);
+    logger.info(`Deleted user profile with ID: ${id}`);
+  }
+
   async getProfileLimitations(): Promise<ProfileLimitation[]> {
     const response = await this.httpClient.get(
       "/user-manager/profile-limitation"
@@ -37,9 +93,37 @@ export class UserManager {
     return response.data;
   }
 
-  async deleteUserProfile(id: string): Promise<void> {
-    await this.httpClient.delete(`/user-manager/user-profile/${id}`);
-    logger.info(`Deleted user profile with ID: ${id}`);
+  async addProfileLimitation(
+    limitation: Omit<ProfileLimitation, ".id">
+  ): Promise<ProfileLimitation> {
+    const response = await this.httpClient.put(
+      "/user-manager/profile-limitation",
+      limitation
+    );
+    logger.info(`Added profile limitation: ${response.data.profile}`);
+    return response.data;
+  }
+
+  async updateProfileLimitation(
+    id: string,
+    limitation: Partial<ProfileLimitation>
+  ): Promise<ProfileLimitation> {
+    const response = await this.httpClient.patch(
+      `/user-manager/profile-limitation/${id}`,
+      limitation
+    );
+    logger.info(`Updated profile limitation: ${response.data.profile}`);
+    return response.data;
+  }
+
+  async deleteProfileLimitation(id: string): Promise<void> {
+    await this.httpClient.delete(`/user-manager/profile-limitation/${id}`);
+    logger.info(`Deleted profile limitation with ID: ${id}`);
+  }
+
+  async getActiveSessions(): Promise<any[]> {
+    const response = await this.httpClient.get("/user-manager/session");
+    return response.data.filter((session: any) => session.active === "yes");
   }
 
   async removeInactiveSessions(): Promise<void> {
@@ -52,12 +136,12 @@ export class UserManager {
       await this.httpClient.post("/user-manager/session/remove", {
         ".id": session[".id"],
       });
-      logger.info(`Removed session with ID: ${session[".id"]}`);
+      logger.info(`Removed inactive session with ID: ${session[".id"]}`);
     }
   }
 
-  async getActiveSessions() {
-    const response = await this.httpClient.get("/user-manager/session");
-    return response.data;
+  async terminateSession(id: string): Promise<void> {
+    await this.httpClient.post("/user-manager/session/remove", { ".id": id });
+    logger.info(`Terminated session with ID: ${id}`);
   }
 }

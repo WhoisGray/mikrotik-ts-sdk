@@ -37,3 +37,14 @@ export interface ProfileLimitation {
   "till-time": string;
   weekdays: string;
 }
+
+export interface UpdateUser {
+  attributes?: string;
+  disabled?: string;
+  group?: string;
+  name?: string;
+  "otp-secret"?: string;
+  password?: string;
+  "shared-users"?: string;
+  comment?: string;
+}
