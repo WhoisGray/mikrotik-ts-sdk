@@ -6,6 +6,7 @@ import { Interface } from "../modules/Interface";
 import { PPP } from "../modules/PPP";
 import { errorHandler } from "../utils/error-handler";
 import { DEFAULT_TIMEOUT } from "../constants";
+import { LoggingManager } from "../modules/LoggingManager";
 
 export class RouterOSClient {
   private httpClient: AxiosInstance;
@@ -13,6 +14,7 @@ export class RouterOSClient {
   public system: System;
   public interface: Interface;
   public ppp: PPP;
+  public logging: LoggingManager;
 
   constructor(private config: Config) {
     this.httpClient = this.createHttpClient();
@@ -20,6 +22,7 @@ export class RouterOSClient {
     this.system = new System(this.httpClient);
     this.interface = new Interface(this.httpClient);
     this.ppp = new PPP(this.httpClient);
+    this.logging = new LoggingManager(this.httpClient);
   }
 
   private createHttpClient(): AxiosInstance {
