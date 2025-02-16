@@ -1,6 +1,6 @@
 {
   "name": "@whoisgray/mikrotik-ts-sdk",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "TypeScript SDK for MikroTik RouterOS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/WhoisGray/mikrotik-ts-sdk#readme",
   "publishConfig": {
-    "@whoisgray:registry": "https://npm.pkg.github.com",
+    "@whoisgray:registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "engines": {
