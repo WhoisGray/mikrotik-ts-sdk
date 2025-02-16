@@ -11,9 +11,14 @@ jobs:
     permissions:
       contents: read
       packages: write
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: "https://registry.npmjs.org" # Important: Explicitly set registry
 
       - name: Install dependencies
         run: npm ci
@@ -21,19 +26,7 @@ jobs:
       - name: Build package
         run: npm run build
 
-      # Switch to npm Registry (IMPORTANT FIX)
-      - name: Setup Node.js for npm Registry
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-          registry-url: "https://registry.npmjs.org/"
-
-      # Authenticate for npm (IMPORTANT FIX)
-      - name: Authenticate with npm
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
-      # Publish to npm Registry
       - name: Publish to npm
-        run: npm publish --access public
+        run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # This is sufficient!
